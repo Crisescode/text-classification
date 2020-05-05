@@ -7,6 +7,8 @@ __pycache__/
 data/
 dataset/
 
+# pycharm
+.idea/
 
 # C extensions
 *.so

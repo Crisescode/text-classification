@@ -32,6 +32,6 @@
 |数据集|模型|类别|Acc|Micro-F1|Macro-F1|备注|
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 |Baidu|NaiveBayes|-|-|-|-|-|
-|Baidu|TextCnn|95|-|0.82478|0.578|epoch 10, lr 0.005, padding 128|
+|Baidu|TextCNN|95|-|0.82478|0.578|epoch 10, lr 0.005, padding 128|
 |Baidu|GCN|95|-|0.8755|0.6914|gcn|
 |Baidu|BERT|95|0.5788|0.917|0.781|only BERT|

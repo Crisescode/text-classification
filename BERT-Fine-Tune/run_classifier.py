@@ -223,7 +223,7 @@ class Baidu_95_Multi_Label_Classification_Processor(DataProcessor):
                 examples = list(zip(token_in_list, predicate_label_list))
                 return examples
 
-    def get_train_sample(self, data_dir):
+    def get_train_examples(self, data_dir):
         return self.create_example(self.load_examples(os.path.join(data_dir, "train")), "train")
 
     def get_dev_examples(self, data_dir):
@@ -855,12 +855,14 @@ def main(_):
   tf.logging.set_verbosity(tf.logging.INFO)
 
   processors = {
-      "cola": ColaProcessor,
-      "mnli": MnliProcessor,
-      "mrpc": MrpcProcessor,
-      "xnli": XnliProcessor,
+      # "cola": ColaProcessor,
+      # "mnli": MnliProcessor,
+      # "mrpc": MrpcProcessor,
+      # "xnli": XnliProcessor,
       "baidu_95": Baidu_95_Multi_Label_Classification_Processor
   }
+
+  tf.logging.info("process: %s", processors)
 
   tokenization.validate_case_matches_checkpoint(FLAGS.do_lower_case,
                                                 FLAGS.init_checkpoint)

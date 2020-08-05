@@ -438,6 +438,14 @@ class ColaProcessor(DataProcessor):
     return examples
 
 
+def predicate_label_to_id(predicate_label, predicate_label_map):
+    predicate_label_map_length = len(predicate_label_map)
+    predicate_label_ids = [0] * predicate_label_map_length
+    for label in predicate_label:
+        predicate_label_ids[predicate_label_map[label]] = 1
+    return predicate_label_ids
+
+
 def convert_single_example(ex_index, example, label_list, max_seq_length,
                            tokenizer):
   """Converts a single `InputExample` into a single `InputFeatures`."""
@@ -520,7 +528,8 @@ def convert_single_example(ex_index, example, label_list, max_seq_length,
   assert len(input_mask) == max_seq_length
   assert len(segment_ids) == max_seq_length
 
-  label_id = label_map[example.label]
+  label_ids = predicate_label_to_id(label_list, label_map)
+
   if ex_index < 5:
     tf.logging.info("*** Example ***")
     tf.logging.info("guid: %s" % (example.guid))
@@ -529,13 +538,13 @@ def convert_single_example(ex_index, example, label_list, max_seq_length,
     tf.logging.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
     tf.logging.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
     tf.logging.info("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
-    tf.logging.info("label: %s (id = %d)" % (example.label, label_id))
+    tf.logging.info("label_ids: %s" % " ".join([str(x) for x in label_ids]))
 
   feature = InputFeatures(
       input_ids=input_ids,
       input_mask=input_mask,
       segment_ids=segment_ids,
-      label_id=label_id,
+      label_id=label_ids,
       is_real_example=True)
   return feature
 
@@ -667,8 +676,8 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
       # I.e., 0.1 dropout
       output_layer = tf.nn.dropout(output_layer, keep_prob=0.9)
 
-    logits = tf.matmul(output_layer, output_weights, transpose_b=True)
-    logits = tf.nn.bias_add(logits, output_bias)
+    logits_wx = tf.matmul(output_layer, output_weights, transpose_b=True)
+    logits = tf.nn.bias_add(logits_wx, output_bias)
 
     # probabilities = tf.nn.softmax(logits, axis=-1)
     # log_probs = tf.nn.log_softmax(logits, axis=-1)
